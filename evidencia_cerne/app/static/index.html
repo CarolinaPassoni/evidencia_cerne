@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#101b30" />
   <title>Evidência | Registros inteligentes</title>
-  <link rel="stylesheet" href="/static/style.css?v=1.6" />
+  <link rel="stylesheet" href="/static/style.css?v=1.8" />
 </head>
 <body>
   <div id="login-screen" class="auth-stage">
@@ -22,7 +22,7 @@
     </form>
   </div>
   <div id="application" class="application hidden">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="brand"><span class="brand-icon">✦</span><div><strong>EVIDÊNCIA<span>+</span></strong><small>Registro inteligente</small></div></div>
       <p class="sidebar-label">ESPAÇO DE TRABALHO</p>
       <nav aria-label="Menu principal" id="main-nav">
@@ -41,13 +41,14 @@
       </nav>
       <div class="sidebar-bottom"><div class="connection"><span id="provider-dot" class="connection-dot"></span><div><b id="provider-name">Verificando...</b><small id="provider-caption">Serviço de escrita</small></div></div><button id="account-trigger" class="user-badge" data-act="account"><span class="avatar" id="avatar">A</span><span><b id="user-name">Administrador</b><small>Minha conta</small></span><span>⋯</span></button><button class="nav-link logout-link" data-act="logout" type="button"><span class="nav-glyph">⇥</span> Sair da plataforma</button></div>
     </aside>
+    <button class="menu-backdrop hidden" id="menu-backdrop" aria-label="Fechar menu" type="button"></button>
     <div class="main-area">
-      <header class="topbar"><div class="breadcrumbs"><button id="mobile-menu" aria-label="Abrir menu">☰</button><span>Plataforma</span><span class="crumb-sep">/</span><strong id="page-name">Visão geral</strong></div><div class="top-actions"><span id="save-indicator" class="save-indicator"></span><button class="btn primary" data-act="new">+ Nova evidência</button></div></header>
+      <header class="topbar"><div class="breadcrumbs"><button id="mobile-menu" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">☰</button><span>Plataforma</span><span class="crumb-sep">/</span><strong id="page-name">Visão geral</strong></div><div class="top-actions"><span id="save-indicator" class="save-indicator"></span><button class="btn account-button" data-act="account" type="button">Minha conta</button><button class="btn exit-button" data-act="logout" type="button">Sair</button><button class="btn primary" data-act="new">+ Nova evidência</button></div></header>
       <main id="content" tabindex="-1"></main>
     </div>
   </div>
   <div id="modal-root"></div>
   <div id="toast" aria-live="polite" role="status"></div>
-  <script src="/static/app.js?v=1.6" defer></script>
+  <script src="/static/app.js?v=1.8" defer></script>
 </body>
 </html>

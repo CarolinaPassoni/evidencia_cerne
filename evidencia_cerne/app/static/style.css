@@ -30,3 +30,36 @@
 .logout-link{width:100%;text-align:left;margin:11px 0 0;border:1px solid rgba(171,186,213,.18);color:#d9e3f3;background:rgba(255,255,255,.045);border-radius:9px;flex-shrink:0}
 .logout-link:hover{background:rgba(255,255,255,.11)}
 #voice-fill-report:not(:empty){margin:13px 0 0;padding:10px 12px;border-radius:9px;background:#effaf7;color:#23655d;font-weight:600;font-size:11px;line-height:1.65}
+
+/* Navigation stays reachable on short screens and narrow phones. */
+.sidebar{height:100dvh;overflow-y:auto;overscroll-behavior:contain;padding-bottom:max(18px,env(safe-area-inset-bottom))}
+.sidebar>*{flex-shrink:0}.sidebar-bottom{padding-top:24px;gap:12px}
+.menu-backdrop{position:fixed;inset:0;background:rgba(16,27,48,.45);border:0;z-index:19}
+.top-actions{gap:8px;flex-wrap:wrap}.topbar{gap:12px}
+.breadcrumbs,.editor-column,.preview-panel,.field,.field-row>*{min-width:0}
+.btn:focus-visible,.nav-link:focus-visible,#mobile-menu:focus-visible{outline:3px solid #7bcfc3;outline-offset:3px}
+.list-cards{grid-template-columns:repeat(auto-fill,minmax(min(100%,285px),1fr))}
+.panel,.evidence-card{overflow-wrap:anywhere}
+@media(max-width:850px){
+.sidebar{width:min(300px,85vw);padding-top:20px}
+.topbar{height:auto;min-height:66px;padding-top:10px;padding-bottom:10px}
+#mobile-menu,.topbar .btn{min-height:44px}
+.breadcrumbs>span{display:none}
+}
+@media(max-width:640px){
+.topbar{align-items:stretch;flex-wrap:wrap}
+.breadcrumbs{flex:1 1 100%}
+.top-actions{width:100%;display:grid;grid-template-columns:1fr auto 1.2fr}
+.top-actions .btn{padding:8px;white-space:normal}
+.container{padding:22px 12px 45px}
+.auth-card{width:100%;max-width:460px;padding:40px 22px}
+.logo-lock{margin-bottom:38px}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ai-banner{flex-wrap:wrap}.ai-banner>div:nth-child(2){min-width:0;flex-basis:calc(100% - 70px)}
+.ai-banner>.btn{width:100%}
+.panel-head,.voice-head,.group-top,.section-title{flex-wrap:wrap}
+.dialog{max-height:calc(100dvh - 24px)}
+.dialog-footer{flex-wrap:wrap}.dialog-footer .btn{flex:1 1 130px;white-space:normal}
+#toast{left:12px;right:12px;bottom:12px;max-width:none}
+}
+@media(min-width:851px){.menu-backdrop{display:none}}
