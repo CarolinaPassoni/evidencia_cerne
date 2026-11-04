@@ -10,19 +10,34 @@ const root=$('#content');
 let toastTimer;
 function toast(message,error=false){const e=$('#toast');e.textContent=message;e.style.background=error?'#9b3044':'#183656';e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),4500)}
 async function api(path,options={}){
-  let headers={'X-CSRF-Token':state.csrf,...options.headers};
-  if(options.body&&!(options.body instanceof FormData)&&typeof options.body!=='string'){headers['Content-Type']='application/json';options.body=JSON.stringify(options.body)}
-  let r;
-  try {
-    r=await fetch('/api'+path,{credentials:'same-origin',...options,headers});
-  } catch(err) {
-    const url=window.location.origin||'http://127.0.0.1:8000';
-    throw Error(`Sem conexão com o servidor. Abra INICIAR_WINDOWS.bat, mantenha a janela preta aberta e acesse ${url}. Se continuar, execute VERIFICAR_CONEXAO_WINDOWS.bat.`);
+  const method=(options.method||'GET').toUpperCase();
+  const headers={'X-CSRF-Token':state.csrf,...options.headers};
+  let body=options.body;
+  if(body&&!(body instanceof FormData)&&typeof body!=='string'){headers['Content-Type']='application/json';body=JSON.stringify(body)}
+  const attempts=method==='GET'?2:1;
+  for(let attempt=0;attempt<attempts;attempt++){
+    let r;
+    try{
+      r=await fetch('/api'+path,{...options,body,credentials:'same-origin',cache:'no-store',headers});
+    }catch{
+      if(attempt+1<attempts)continue;
+      throw Error(method==='GET'?'Não foi possível conectar ao servidor. Aguarde alguns segundos e tente novamente.':'O salvamento não foi confirmado. Mantenha esta página aberta para preservar o texto e tente novamente.');
+    }
+    if(r.status===401){if(state.user)showLogin();throw Error('Sua sessão terminou. Faça login novamente.')}
+    if([502,503,504].includes(r.status)&&attempt+1<attempts)continue;
+    const raw=await r.text();
+    let data;
+    try{data=JSON.parse(raw)}catch{
+      const action=method==='GET'?'Tente novamente em alguns segundos.':'A operação não foi confirmada. Mantenha esta página aberta e confira o registro antes de tentar novamente.';
+      throw Error('O servidor retornou uma resposta inesperada (HTTP '+r.status+', '+method+' /api'+path.split('?')[0]+'). '+action);
+    }
+    if(!r.ok){
+      let message=typeof data.detail==='string'?data.detail:'Não foi possível concluir a operação.';
+      if(r.status===429)message='Muitas solicitações. Aguarde um pouco e tente novamente.';
+      throw Error(message+' (HTTP '+r.status+')');
+    }
+    return data;
   }
-  if(r.status===401&&state.user){showLogin();throw Error('Sua sessão terminou. Faça login novamente.')}
-  const data=await r.json().catch(()=>({detail:'Resposta inválida do servidor.'}));
-  if(!r.ok)throw Error(typeof data.detail==='string'?data.detail:`Falha (${r.status}).`);
-  return data;
 }
 function setLoading(b,label='Carregando...'){root.innerHTML=`<div class="container"><div class="panel"><p class="muted">${esc(label)}</p></div></div>`}
 function renderPage(title,subtitle,inside,extra=''){const names={dashboard:'Visão geral',activities:'Atividades',editor:'Editar evidência',documents:'Documentos',knowledge:'Base CERNE',projects:'Projetos',people:'Pessoas e itens',templates:'Modelos Word',settings:'Configurar IA'};$('#page-name').textContent=names[state.view]||title;root.innerHTML=`<div class="container"><div class="hero-head"><div><p class="eyebrow">EVIDÊNCIA +</p><h1>${esc(title)}</h1><p>${esc(subtitle)}</p></div>${extra}</div>${inside}</div>`;document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===state.view));}
