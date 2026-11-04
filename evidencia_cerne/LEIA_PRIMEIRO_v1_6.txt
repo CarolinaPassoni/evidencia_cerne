@@ -1,0 +1,32 @@
+EVIDÊNCIA+ 1.6 | MELHORIAS DE IA, MICROFONE E SAÍDA
+
+Atualização para instalação já existente:
+1. Feche a plataforma e a janela preta do servidor.
+2. FAÇA UMA CÓPIA DE SEGURANÇA DA PASTA data.
+3. Extraia o ZIP de atualização dentro da pasta evidencia_cerne,
+   substituindo somente os arquivos presentes no ZIP.
+4. NÃO EXCLUA data, .env, .venv nem o arquivo evidencias.db.
+5. Execute INICIAR_WINDOWS.bat. Na primeira execução, o sistema poderá
+   instalar a biblioteca cryptography (precisa de internet).
+6. Atualize a página no navegador com Ctrl + F5.
+
+FUNCIONALIDADES NOVAS:
+- Menu Configurar IA: o administrador escolhe Gemini/OpenAI, cadastra a
+  chave sem mexer no .env e testa a conexão.
+- Botão Sair da plataforma visível no menu esquerdo.
+- Microfone ao lado de todos os campos editáveis, inclusive data, projeto,
+  participantes e descrições de fotos.
+- Falar e preencher tudo: relate a ação em uma única fala. Ao parar, o
+  sistema interpreta e preenche os campos vazios, inclusive até 3 registros
+  fotográficos, sem substituir dados que já foram escritos.
+- Reconhecimento de voz depende do navegador (Chrome/Edge compatível),
+  autorização de microfone e pode exigir conexão com serviços externos.
+- Não é possível inventar informações que o relato não contém. Nesse caso,
+  o usuário deve complementar a informação antes da aprovação.
+
+O MODELO DOCX ORIGINAL FOI PRESERVADO SEM ALTERAÇÕES.
+
+ATENÇÃO:
+O sistema NÃO foi alterado diretamente no seu computador por esta entrega.
+O pacote precisa ser instalado localmente. Sua senha atual continua igual.
+A IA generativa só funcionará após cadastrar uma chave válida do provedor.

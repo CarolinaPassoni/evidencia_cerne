@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101b30" />
+  <title>Evidência | Registros inteligentes</title>
+  <link rel="stylesheet" href="/static/style.css?v=1.6" />
+</head>
+<body>
+  <div id="login-screen" class="auth-stage">
+    <div class="auth-art"><div class="auth-shape"><div class="shape-dot"></div><div class="shape-paper"><span>01</span><span>02</span><span>03</span></div></div><p>Do que aconteceu<br>ao que fica registrado.</p><small>Da anotação ao documento. Com clareza e rastreabilidade.</small></div>
+    <form id="login-form" class="auth-card">
+      <div class="logo-lock"><span class="brand-icon">✦</span><span>EVIDÊNCIA <b>+</b></span></div>
+      <h1>Boas-vindas de volta.</h1>
+      <p class="muted">Entre para continuar seus registros.</p>
+      <label for="login-email">E-mail</label><input id="login-email" type="email" autocomplete="username" placeholder="seu@email.com" required />
+      <label for="login-password">Senha</label><input id="login-password" type="password" autocomplete="current-password" placeholder="Sua senha" required />
+      <button class="btn primary large" type="submit">Entrar na plataforma <span>→</span></button>
+      <p id="login-error" class="error-text" role="alert"></p>
+      <small>Primeiro acesso? Consulte <code>data/ACESSO_INICIAL.txt</code>. Se aparecer erro de conexão, mantenha <code>INICIAR_WINDOWS.bat</code> aberto.</small>
+    </form>
+  </div>
+  <div id="application" class="application hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-icon">✦</span><div><strong>EVIDÊNCIA<span>+</span></strong><small>Registro inteligente</small></div></div>
+      <p class="sidebar-label">ESPAÇO DE TRABALHO</p>
+      <nav aria-label="Menu principal" id="main-nav">
+        <button data-view="dashboard" class="nav-link active"><span class="nav-glyph">▦</span> Visão geral</button>
+        <button data-view="activities" class="nav-link"><span class="nav-glyph">▤</span> Atividades</button>
+        <button data-view="editor" class="nav-link"><span class="nav-glyph">✎</span> Criar evidência</button>
+        <button data-view="documents" class="nav-link"><span class="nav-glyph">▣</span> Documentos</button>
+      </nav>
+      <p class="sidebar-label">ORGANIZAÇÃO</p>
+      <nav aria-label="Configurações">
+        <button data-view="projects" class="nav-link"><span class="nav-glyph">◇</span> Projetos</button>
+        <button data-view="people" class="nav-link"><span class="nav-glyph">♧</span> Pessoas e itens</button>
+        <button data-view="knowledge" class="nav-link"><span class="nav-glyph">◎</span> Base CERNE</button>
+        <button data-view="templates" class="nav-link"><span class="nav-glyph">▤</span> Modelos Word</button>
+        <button data-view="settings" id="ai-settings-nav" class="nav-link hidden"><span class="nav-glyph">✦</span> Configurar IA</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="connection"><span id="provider-dot" class="connection-dot"></span><div><b id="provider-name">Verificando...</b><small id="provider-caption">Serviço de escrita</small></div></div><button id="account-trigger" class="user-badge" data-act="account"><span class="avatar" id="avatar">A</span><span><b id="user-name">Administrador</b><small>Minha conta</small></span><span>⋯</span></button><button class="nav-link logout-link" data-act="logout" type="button"><span class="nav-glyph">⇥</span> Sair da plataforma</button></div>
+    </aside>
+    <div class="main-area">
+      <header class="topbar"><div class="breadcrumbs"><button id="mobile-menu" aria-label="Abrir menu">☰</button><span>Plataforma</span><span class="crumb-sep">/</span><strong id="page-name">Visão geral</strong></div><div class="top-actions"><span id="save-indicator" class="save-indicator"></span><button class="btn primary" data-act="new">+ Nova evidência</button></div></header>
+      <main id="content" tabindex="-1"></main>
+    </div>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast" aria-live="polite" role="status"></div>
+  <script src="/static/app.js?v=1.6" defer></script>
+</body>
+</html>

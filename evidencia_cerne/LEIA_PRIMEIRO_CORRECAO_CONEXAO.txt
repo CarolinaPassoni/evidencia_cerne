@@ -1,0 +1,23 @@
+EVIDENCIA+ | CORRECAO DE CONEXAO (v1.2)
+
+O erro Failed to fetch significa falha de comunicacao com o servidor, e nao senha incorreta.
+
+ATUALIZACAO SEM APAGAR DADOS:
+1. Feche o navegador e o servidor da plataforma.
+2. Extraia os arquivos deste ZIP dentro da pasta evidencia_cerne, confirmando a substituicao.
+   Caso esteja substituindo manualmente, preserve a estrutura das pastas.
+3. NAO exclua nem substitua a pasta data, o arquivo .env ou a pasta .venv.
+4. Execute INICIAR_WINDOWS.bat. Mantenha aberta a janela preta.
+5. O navegador abrira SOMENTE quando o servidor estiver respondendo.
+6. Se houver erro, execute VERIFICAR_CONEXAO_WINDOWS.bat e envie uma foto do resultado.
+
+DIAGNOSTICO RAPIDO:
+Com o servidor aberto, abra http://127.0.0.1:8000/api/health
+A resposta correta inclui "ok":true e "app":"evidencia_cerne".
+Se usar outra porta no .env, troque 8000 pela porta configurada.
+
+A SENHA NAO MUDA NESTA CORRECAO.
+Uma vez recuperada a conexao, se surgir Login ou senha incorretos,
+use REDEFINIR_ACESSO_WINDOWS.bat com o servidor fechado.
+
+SEGURANCA: nao compartilhe .env nem o banco evidencias.db com terceiros.

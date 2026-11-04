@@ -1,0 +1,15 @@
+ATUALIZAÇÃO 1.4 | MODELO DOCX ORIGINAL INTEGRADO
+
+1. Pare o servidor do Evidência+ (feche a janela preta).
+2. Faça backup da pasta data.
+3. Extraia o conteúdo deste pacote na raiz evidencia_cerne e aceite substituir arquivos.
+4. NÃO EXCLUA as pastas data, uploads, documents, nem o arquivo .env.
+5. Inicie o sistema com INICIAR_WINDOWS.bat e atualize o navegador com Ctrl+F5.
+6. Em Modelos, use "Baixar modelo DOCX original" para conferir o arquivo instalado.
+7. Ao exportar, selecione "Modelo fiel ao documento enviado".
+
+O Word é criado diretamente a partir do modelo enviado, com fontes, margens,
+formatação de parágrafos, seções e fotos substituídas pelos registros reais.
+A geração de PDF conserva o layout de referência, mas não usa o motor de Word.
+
+A atualização não redefine senhas e não apaga o banco SQLite.

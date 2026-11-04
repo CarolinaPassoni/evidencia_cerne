@@ -1,0 +1,29 @@
+EVIDENCIA+ | ATUALIZACAO 1.5
+
+ESTA ATUALIZACAO FOI FEITA PARA O MODELO WORD ENVIADO PELO USUARIO.
+
+INSTALACAO SOBRE VERSAO ANTERIOR (NAO APAGA OS REGISTROS)
+1. Feche o sistema e a janela preta do servidor.
+2. Copie a pasta 'data' para um local seguro antes de substituir os arquivos.
+3. Extraia todos os arquivos deste pacote NA RAIZ de sua pasta 'evidencia_cerne'.
+   Ao perguntar, aceite substituir os arquivos com o mesmo nome.
+4. NAO apague nem substitua sua pasta 'data', o arquivo '.env' ou a pasta '.venv'.
+5. Inicie com INICIAR_WINDOWS.bat e no navegador pressione Ctrl+F5.
+
+O QUE FOI FINALIZADO
+- Modelo DOCX original incorporado com sua sequencia e estilo.
+- Cadastro, revisao e exportacao DOCX/PDF.
+- Fotografias com descricoes individuais e campo de participantes por foto.
+- Registro de alteracoes, duplicacao, projetos, pessoas, pesquisa, CERNE e RAG lexical.
+- Backup completo do banco SQLite, fotos e documentos, em 'Minha conta'.
+- Configurador de IA: CONFIGURAR_IA_WINDOWS.bat (precisa de chave propria).
+- Migracao automatica das duas colunas novas nas fotografias.
+
+LOGIN
+O e-mail e a senha atuais do seu banco de dados NAO mudam na atualizacao.
+Se voce nao consegue entrar, execute REDEFINIR_ACESSO_WINDOWS.bat.
+
+IMPORTANTE
+O sistema funciona LOCALMENTE. A publicacao na internet nao ocorre so por instalar o ZIP.
+Para hospedagem online e necessario servidor persistente, HTTPS, backups externos
+ e configuracao segura de acesso e infraestrutura.
