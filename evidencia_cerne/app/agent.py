@@ -181,6 +181,35 @@ Trechos recuperados da base de conhecimento CERNE: {json.dumps(sources,ensure_as
             'groups':[{'position':g.get('position'),'title':str(g.get('title','')),'description':str(g.get('description','')),'people':str(g.get('people',''))} for g in ans.get('groups',[]) if isinstance(g,dict) and g.get('position') in [1,2,3]],
             'missing':ans.get('missing',[]),'sources':sources}
 
+
+def complete_field(field, existing, spoken):
+    """Only enrich information provided by the user; never fabricate evidence."""
+    existing=str(existing or '').strip()
+    spoken=str(spoken or '').strip()
+    combined=' '.join(part for part in (existing,spoken) if part).strip()
+    if not combined:
+        return {'text':'','mode':'basic'}
+    if not provider():
+        return {'text':combined[:12000],'mode':'basic'}
+    label={'description':'Descrição da atividade ou do registro fotográfico',
+           'objective':'Objetivo','results':'Resultados','indicators':'Indicadores',
+           'competencies':'Competências e habilidades','conclusions':'Considerações finais',
+           'participants':'Participantes','people':'Participantes ou componentes',
+           'title':'Título','location':'Local'}.get(field,field)
+    prompt=f"""Você é um revisor de evidências institucionais. Retorne SOMENTE JSON com a chave text.
+Campo: {label}
+Texto confirmado pelo usuário: {json.dumps(existing,ensure_ascii=False)}
+Complemento ditado agora: {json.dumps(spoken,ensure_ascii=False)}
+Una o texto anterior com o complemento de modo natural. Corrija ortografia, pontuação e clareza.
+Não exclua fatos do texto anterior, não acrescente fatos, datas, números, resultados,
+nomes ou práticas CERNE não declarados. Não transforme objetivos em resultados atingidos.
+Se o campo contém lista de indicadores, mantenha um indicador por linha.
+Se é título, local ou participantes, preserve nomes próprios e não crie informações novas.
+Responda somente JSON com a chave text, contendo todo o texto reescrito."""
+    result=generate(prompt)
+    revised=str(result.get('text') or '').strip()
+    return {'text':(revised or combined)[:12000],'mode':'ai'}
+
 def describe_photo_groups(activity):
     """Opt-in multimodal photo description; uploads never leave host without user action."""
     import base64, io
@@ -191,7 +220,7 @@ def describe_photo_groups(activity):
     settings = current_settings()
     photos=[]
     for group in activity.groups:
-        for item in list(group.photos)[:2]:
+        for item in list(group.photos)[:1]:
             fp=DATA_DIR/'uploads'/item.filename
             if not fp.exists(): continue
             with Image.open(fp) as im:

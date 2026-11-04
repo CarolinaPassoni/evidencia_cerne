@@ -140,7 +140,7 @@ def create_reference_docx(activity, template, out_path):
         _from_model(doc,samples[4],'')
         _from_model(doc,samples[5 if pos==1 else (8 if pos==2 else 11)],f'Registro {pos}')
         group=groups.get(pos)
-        photos=list(group.photos) if group else []
+        photos=list(group.photos)[:1] if group else []
         picture_sample=samples[6 if pos==1 else (9 if pos==2 else 12)]
         if photos:
             for photo in photos:
@@ -217,7 +217,7 @@ def create_reference_pdf(activity, template, out_path):
     for pos in (1,2,3):
         group=groups.get(pos)
         story.append(Paragraph(f'Registro {pos}',heading))
-        photos=list(group.photos) if group else []
+        photos=list(group.photos)[:1] if group else []
         if photos:
             for photo in photos:
                 path=DATA_DIR/'uploads'/photo.filename
@@ -299,7 +299,7 @@ def create_docx(activity, template, out_path):
     if not populated: doc.add_paragraph('Não foram cadastrados registros fotográficos.')
     for g in populated:
         doc.add_heading(f'Registro {g.position} | {g.title or "Registro fotográfico"}', level=2)
-        photos=list(g.photos)
+        photos=list(g.photos)[:1]
         if photos:
             for start in range(0,len(photos),2):
                 row_photos=photos[start:start+2]
@@ -361,9 +361,9 @@ def create_pdf(activity, template, out_path):
     if not populated: s.append(p('Não foram cadastrados registros fotográficos.'))
     for g in populated:
         s.append(Paragraph(f'Registro {g.position} | {escape(g.title or "Registro fotográfico")}',styles['EvtSub']))
-        for start in range(0,len(g.photos),2):
+        for start in range(0,min(len(g.photos),1),2):
             cells=[]
-            for photo in g.photos[start:start+2]:
+            for photo in g.photos[start:start+1]:
                 fp=DATA_DIR/'uploads'/photo.filename
                 if fp.exists():
                     try:

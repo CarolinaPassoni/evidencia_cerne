@@ -65,7 +65,7 @@ async def lifespan(app: FastAPI):
                 print(f'\n*** PRIMEIRO ACESSO: consulte {target} ***\n',flush=True)
     yield
 
-app=FastAPI(title='Evidência CERNE',version='1.7',lifespan=lifespan,docs_url=None,redoc_url=None)
+app=FastAPI(title='Evidência CERNE',version='1.8',lifespan=lifespan,docs_url=None,redoc_url=None)
 app.add_middleware(SessionMiddleware,secret_key=secret_key(),same_site='strict',https_only=os.getenv('COOKIE_HTTPS','0')=='1',max_age=60*60*12)
 app.mount('/static',StaticFiles(directory=BASE_DIR/'app'/'static'),name='static')
 
@@ -90,7 +90,7 @@ def home(): return FileResponse(BASE_DIR/'app'/'static'/'index.html')
 @app.get('/api/health')
 def health():
     """Diagnóstico público de conectividade, sem dados de usuários."""
-    return {'ok': True, 'app': 'evidencia_cerne', 'version': '1.7'}
+    return {'ok': True, 'app': 'evidencia_cerne', 'version': '1.8'}
 
 class Login(BaseModel):
     email: str
@@ -201,7 +201,7 @@ def backup_all(db: Session=Depends(db_session), user: User=Depends(admin_or_403)
                             if file.is_file() and not file.is_symlink():
                                 zf.write(file,f'{sub}/{file.relative_to(folder).as_posix()}')
                 manifest={
-                    'application':'Evidencia+', 'version':'1.6',
+                    'application':'Evidencia+', 'version':'1.8',
                     'created_utc':datetime.now(timezone.utc).isoformat(),
                     'contents':'Banco SQLite, fotografias e documentos gerados',
                     'notice':'O backup contém dados pessoais. Proteja o arquivo e nunca o compartilhe publicamente.'
@@ -327,7 +327,8 @@ async def upload_photo(activity_id:str,position:int,files:list[UploadFile]=File(
     a=get_activity(db,activity_id)
     group=next((g for g in a.groups if g.position==position),None)
     if group is None: raise HTTPException(404,'Registro fotográfico inválido.')
-    if not files or len(files)>15 or len(files)+len(group.photos)>25: raise HTTPException(400,'Envie de 1 a 15 imagens por vez (máximo 25 por registro).')
+    if not files or len(files)!=1: raise HTTPException(400,'Envie exatamente uma foto por registro.')
+    if db.query(Photo).filter_by(group_id=group.id).count()>=1: raise HTTPException(409,'Já existe uma foto neste registro. Exclua a atual para substituí-la.')
     pending=[]
     try:
         for item in files:
@@ -346,6 +347,11 @@ async def upload_photo(activity_id:str,position:int,files:list[UploadFile]=File(
             except (UnidentifiedImageError,ValueError,OSError,Image.DecompressionBombError) as exc:
                 raise HTTPException(422,'Arquivo de imagem inválido ou excessivamente grande.') from exc
             pending.append((name,os.path.basename(item.filename or 'imagem.jpg')[:230],path.read_bytes()))
+        # Evita duas fotos enviadas simultaneamente ao mesmo registro no PostgreSQL.
+        if db.get_bind().dialect.name == 'postgresql':
+            db.query(PhotoGroup).filter_by(id=group.id).with_for_update().one()
+        if db.query(Photo).filter_by(group_id=group.id).count():
+            raise HTTPException(409,'Já existe uma foto neste registro. Exclua a atual para substituí-la.')
         next_pos=max([p.position for p in group.photos] or [0])+1
         for i,(name,orig,blob) in enumerate(pending):
             db.add(Photo(group_id=group.id,filename=name,original_name=orig,position=next_pos+i,blob=blob))
@@ -587,6 +593,23 @@ def history(activity_id:str,db:Session=Depends(db_session),user=Depends(user_or_
     for row in db.query(AuditLog).filter_by(activity_id=activity_id).order_by(AuditLog.timestamp.desc()).limit(100).all():
         out.append({'id':row.id,'action':row.action,'detail':row.detail,'timestamp':iso(row.timestamp)})
     return out
+
+
+class FieldDictationInput(BaseModel):
+    field:str=Field(min_length=2,max_length=80)
+    existing:str=Field(default='',max_length=12000)
+    spoken:str=Field(min_length=1,max_length=10000)
+
+@app.post('/api/ai/complete-field')
+def ai_complete_field(data:FieldDictationInput,user:User=Depends(user_or_401)):
+    from .agent import complete_field
+    valid=set(FIELDS)|set(GROUP_FIELDS)|{'description','people'}
+    if data.field not in valid or data.field in {'project_id','status','activity_date'}:
+        raise HTTPException(422,'Campo incompatível com complementação por IA.')
+    try:
+        return complete_field(data.field,data.existing,data.spoken)
+    except ValueError as exc:
+        raise HTTPException(502,str(exc))
 
 class VoiceInput(BaseModel):
     text:str=Field(min_length=5,max_length=16000)

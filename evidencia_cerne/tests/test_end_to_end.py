@@ -63,14 +63,18 @@ def test_02_crud_ai_knowledge_and_export():
         patch={'title':'Oficina de robótica','activity_date':'2026-11-03','project_id':project,'description':'Os estudantes montaram um robô no laboratório.','objective':'Desenvolver a montagem de componentes.','results':'Foi montado um protótipo.','conclusions':'A atividade registrou a montagem do protótipo.','participants':'Turma do módulo II; Professores convidados','indicators':'Protótipos montados: 1\nFotografias anexadas: 2','competencies':'Trabalho em equipe: montagem conjunta.\nOrganização: separação de componentes.','groups':[{'position':1,'title':'Componentes','people':'Turma do módulo II','description':'Peças organizadas.'},{'position':2,'title':'Montagem','description':'Estudantes trabalhando na estrutura.'}]}
         assert c.patch('/api/activities/'+aid,json=patch).status_code==200
         image=Image.new('RGB',(840,460),(164,184,211));raw=BytesIO();image.save(raw,'JPEG')
-        upload=c.post(f'/api/activities/{aid}/photos/1',files=[('files',('a.jpg',raw.getvalue(),'image/jpeg')),('files',('b.jpg',raw.getvalue(),'image/jpeg'))])
+        # A regra atual permite somente uma foto por registro.
+        attempt=c.post(f'/api/activities/{aid}/photos/1',files=[('files',('a.jpg',raw.getvalue(),'image/jpeg')),('files',('b.jpg',raw.getvalue(),'image/jpeg'))])
+        assert attempt.status_code==400
+        upload=c.post(f'/api/activities/{aid}/photos/1',files={'files':('a.jpg',raw.getvalue(),'image/jpeg')})
         assert upload.status_code==200,upload.text
-        assert len(upload.json()['groups'][0]['photos'])==2  # response must contain uploaded images
+        assert len(upload.json()['groups'][0]['photos'])==1
+        assert c.post(f'/api/activities/{aid}/photos/1',files={'files':('extra.jpg',raw.getvalue(),'image/jpeg')}).status_code==409
+        second=c.post(f'/api/activities/{aid}/photos/2',files={'files':('b.jpg',raw.getvalue(),'image/jpeg')})
+        assert second.status_code==200
         photos=upload.json()['groups'][0]['photos']
         assert c.get(photos[0]['url']).status_code==200
-        r=c.post('/api/photos/'+photos[1]['id']+'/move',json={'direction':'up'});assert r.status_code==200
-        reordered=c.get('/api/activities/'+aid).json()['groups'][0]['photos']
-        assert reordered[0]['id']==photos[1]['id']
+        assert len(second.json()['groups'][1]['photos'])==1
         assert c.post('/api/activities/'+aid+'/generate',json={'format':'docx'}).status_code==409
         assert c.patch('/api/activities/'+aid,json={'status':'approved'}).status_code==200
         doc=c.post('/api/activities/'+aid+'/generate',json={'format':'docx'});assert doc.status_code==200,doc.text
@@ -99,7 +103,7 @@ def test_02_crud_ai_knowledge_and_export():
         assert c.post('/api/activities/'+aid+'/ai/refine').status_code==200
         assert c.get('/api/documents').status_code==200
         copy=c.post('/api/activities/'+aid+'/duplicate');assert copy.status_code==200
-        assert len(copy.json()['groups'][0]['photos'])==2
+        assert len(copy.json()['groups'][0]['photos'])==1
         assert copy.json()['competencies'].startswith('Trabalho em equipe')
         assert c.delete('/api/photos/'+photos[0]['id']).status_code==200
         assert c.get('/api/activities/'+aid).status_code==200
