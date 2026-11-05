@@ -63,3 +63,49 @@
 #toast{left:12px;right:12px;bottom:12px;max-width:none}
 }
 @media(min-width:851px){.menu-backdrop{display:none}}
+
+/* v1.9: uma etapa por página. O documento Word e a base de dados não são alterados. */
+.wizard-editor-layout{display:block;max-width:1080px;margin:0 auto}
+.wizard-editor-layout .editor-column{max-width:100%;min-width:0}
+.wizard-header{background:#fff;border:1px solid #e5eaf4;border-radius:19px;padding:24px 26px 20px;margin:0 auto 20px;max-width:1080px;box-shadow:var(--shadow);scroll-margin-top:94px}
+.wizard-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.wizard-heading h2{font-size:22px;line-height:1.25;margin:0 0 6px;color:#1c2d4b}
+.wizard-heading p{font-size:12px;color:#71839e;margin:0;line-height:1.55}
+.wizard-overline{font-size:10px!important;font-weight:800;letter-spacing:.13em;color:#6076d2!important;margin-bottom:8px!important}
+.wizard-counter{font-size:11px;font-weight:800;color:#5269cb;white-space:nowrap;border-radius:999px;background:#eff2ff;padding:10px 13px}
+.wizard-progress-track{height:5px;background:#ebeff7;border-radius:999px;overflow:hidden;margin:19px 0 17px}
+.wizard-progress-track>span{height:100%;display:block;background:linear-gradient(90deg,#516ce0,#32b9a6);border-radius:999px;transition:width .18s ease}
+.wizard-steps{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 7px;scrollbar-width:thin;scrollbar-color:#c1cae3 transparent}
+.wizard-tab{display:flex;flex-shrink:0;align-items:center;gap:7px;background:#f8faff;border:1px solid #e5eaf4;border-radius:12px;padding:10px 12px;font-size:11px;font-weight:700;color:#77879e;transition:background .15s,color .15s,box-shadow .15s}
+.wizard-tab:hover{border-color:#a8b7ed;color:#4a61d0}
+.wizard-tab.active{background:#eaf0ff;color:#3c5bc9;border-color:#c3d0ff;box-shadow:inset 0 -2px #5473e7}
+.wizard-tab.completed .wizard-step-number{background:#e2f6f1;color:#0f937e}
+.wizard-step-number{display:grid;place-items:center;border-radius:50%;width:22px;height:22px;flex-shrink:0;background:#e7ebf4;color:#798ba5;font-size:11px}
+.wizard-tab.active .wizard-step-number{background:#5173e7;color:#fff}
+.wizard-page[hidden],.wizard-next[hidden]{display:none!important}
+.wizard-page{animation:wizard-appear .2s ease-out}
+@keyframes wizard-appear{from{opacity:.82;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.wizard-page>.panel{padding:30px 32px}
+.wizard-page .panel{margin-bottom:18px}
+.wizard-page .editor-column{max-width:none}
+.wizard-page .preview-panel{position:static;width:100%;max-width:none}
+.wizard-page .paper-shell{max-height:580px}
+.wizard-photo-panel,.wizard-card{min-height:230px}
+.wizard-photo-panel .group-panel{margin:0}
+.wizard-page .ai-banner{margin-bottom:17px}
+.wizard-footer{position:sticky;bottom:12px;z-index:8;max-width:1080px;margin:12px auto 18px;display:flex;justify-content:space-between;align-items:center;gap:15px;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border:1px solid #dfe7f3;border-radius:16px;padding:13px 16px;box-shadow:0 15px 35px rgba(31,54,94,.12)}
+#wizard-footer-label{font-size:12px;color:#71829c;font-weight:700;text-align:center}
+.wizard-footer .btn{min-width:130px}
+.wizard-footer .btn:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:850px){.wizard-header{scroll-margin-top:106px}.wizard-heading h2{font-size:19px}}
+@media(max-width:640px){
+  .wizard-header{padding:18px 14px 12px;border-radius:14px;margin-bottom:14px;scroll-margin-top:132px}
+  .wizard-heading{align-items:start}.wizard-heading h2{font-size:18px}
+  .wizard-heading p{font-size:11px}.wizard-counter{font-size:10px;padding:7px 9px}
+  .wizard-tab{padding:9px 10px;font-size:10px}
+  .wizard-page>.panel{padding:19px 16px}
+  .wizard-footer{bottom:8px;padding:10px 12px;gap:6px;border-radius:13px}
+  .wizard-footer .btn{font-size:11px;min-width:auto;padding:10px 11px;flex:1}
+  #wizard-footer-label{font-size:10px;flex:0 1 110px;line-height:1.3}
+}
+@media(prefers-reduced-motion:reduce){.wizard-page{animation:none}.wizard-progress-track>span{transition:none}}

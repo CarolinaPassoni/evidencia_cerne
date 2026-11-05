@@ -65,7 +65,7 @@ async def lifespan(app: FastAPI):
                 print(f'\n*** PRIMEIRO ACESSO: consulte {target} ***\n',flush=True)
     yield
 
-app=FastAPI(title='Evidência CERNE',version='1.8',lifespan=lifespan,docs_url=None,redoc_url=None)
+app=FastAPI(title='Evidência CERNE',version='1.9',lifespan=lifespan,docs_url=None,redoc_url=None)
 app.add_middleware(SessionMiddleware,secret_key=secret_key(),same_site='strict',https_only=os.getenv('COOKIE_HTTPS','0')=='1',max_age=60*60*12)
 app.mount('/static',StaticFiles(directory=BASE_DIR/'app'/'static'),name='static')
 
@@ -90,7 +90,7 @@ def home(): return FileResponse(BASE_DIR/'app'/'static'/'index.html')
 @app.get('/api/health')
 def health():
     """Diagnóstico público de conectividade, sem dados de usuários."""
-    return {'ok': True, 'app': 'evidencia_cerne', 'version': '1.8'}
+    return {'ok': True, 'app': 'evidencia_cerne', 'version': '1.9'}
 
 class Login(BaseModel):
     email: str
@@ -201,7 +201,7 @@ def backup_all(db: Session=Depends(db_session), user: User=Depends(admin_or_403)
                             if file.is_file() and not file.is_symlink():
                                 zf.write(file,f'{sub}/{file.relative_to(folder).as_posix()}')
                 manifest={
-                    'application':'Evidencia+', 'version':'1.8',
+                    'application':'Evidencia+', 'version':'1.9',
                     'created_utc':datetime.now(timezone.utc).isoformat(),
                     'contents':'Banco SQLite, fotografias e documentos gerados',
                     'notice':'O backup contém dados pessoais. Proteja o arquivo e nunca o compartilhe publicamente.'
